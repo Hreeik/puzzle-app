@@ -38,8 +38,7 @@ const PuzzleGame: FC = () => {
         if (draggedTile === null) return;
 
         // Check if the piece is being placed in its correct position
-        const isCorrectPosition = tiles[draggedTile] === dropIndex + 1 || 
-                                (tiles[draggedTile] === null && dropIndex === 8);
+        const isCorrectPosition = tiles[draggedTile] === dropIndex + 1;
         
         if (isCorrectPosition) {
             const newPlacedTiles = [...placedTiles];
