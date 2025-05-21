@@ -1,4 +1,5 @@
 import {FC, useState, DragEvent, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import './PuzzleGame.css';
 
 type Tile = number | null;
@@ -15,6 +16,9 @@ function shuffle(array: Tile[]): Tile[] {
 }
 
 const PuzzleGame: FC = () => {
+    const navigate = useNavigate();
+    const [isSolved, setIsSolved] = useState(false);
+    
     // Load saved state or initialize new state
     const [tiles, setTiles] = useState<Tile[]>(() => {
         const savedTiles = localStorage.getItem('puzzleTiles');
@@ -32,6 +36,12 @@ const PuzzleGame: FC = () => {
         const savedPlacedPieces = localStorage.getItem('puzzlePlacedPieces');
         return savedPlacedPieces ? JSON.parse(savedPlacedPieces) : Array(9).fill(null);
     });
+
+    // Check if puzzle is solved
+    useEffect(() => {
+        const isPuzzleSolved = placedPieces.every((piece, index) => piece === index + 1);
+        setIsSolved(isPuzzleSolved);
+    }, [placedPieces]);
 
     // Save state whenever it changes
     useEffect(() => {
@@ -51,6 +61,7 @@ const PuzzleGame: FC = () => {
         setPlacedTiles(Array(9).fill(false));
         setPlacedPieces(Array(9).fill(null));
         setDraggedTile(null);
+        setIsSolved(false);
     };
 
     const handleDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
@@ -105,6 +116,18 @@ const PuzzleGame: FC = () => {
 
     return (
         <div className="puzzle-container">
+            {isSolved && (
+                <div className="congratulations">
+                    <h2>Congratulations! 🎉</h2>
+                    <p>You solved the puzzle!</p>
+                    <button 
+                        className="secret-button"
+                        onClick={() => navigate('/secret')}
+                    >
+                        Discover Secret
+                    </button>
+                </div>
+            )}
             <div className="puzzle-content">
                 <div className="grid">
                     {Array(9).fill(null).map((_, index) => (

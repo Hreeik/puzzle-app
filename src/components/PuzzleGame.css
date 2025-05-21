@@ -119,3 +119,58 @@
     user-select: none;
     -webkit-user-drag: none;
 }
+
+.congratulations {
+    text-align: center;
+    margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.congratulations h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.congratulations p {
+    color: #34495e;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.secret-button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.secret-button:hover {
+    background-color: #219a52;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.secret-button:active {
+    background-color: #1e8449;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
