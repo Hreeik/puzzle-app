@@ -1,4 +1,4 @@
-import {FC, useState, DragEvent} from 'react';
+import {FC, useState, DragEvent, useEffect} from 'react';
 import './PuzzleGame.css';
 
 type Tile = number | null;
@@ -15,10 +15,43 @@ function shuffle(array: Tile[]): Tile[] {
 }
 
 const PuzzleGame: FC = () => {
-    const [tiles, setTiles] = useState<Tile[]>(shuffle(initialTiles));
+    // Load saved state or initialize new state
+    const [tiles, setTiles] = useState<Tile[]>(() => {
+        const savedTiles = localStorage.getItem('puzzleTiles');
+        return savedTiles ? JSON.parse(savedTiles) : shuffle(initialTiles);
+    });
+    
     const [draggedTile, setDraggedTile] = useState<number | null>(null);
-    const [placedTiles, setPlacedTiles] = useState<boolean[]>(Array(9).fill(false));
-    const [placedPieces, setPlacedPieces] = useState<(number | null)[]>(Array(9).fill(null));
+    
+    const [placedTiles, setPlacedTiles] = useState<boolean[]>(() => {
+        const savedPlacedTiles = localStorage.getItem('puzzlePlacedTiles');
+        return savedPlacedTiles ? JSON.parse(savedPlacedTiles) : Array(9).fill(false);
+    });
+    
+    const [placedPieces, setPlacedPieces] = useState<(number | null)[]>(() => {
+        const savedPlacedPieces = localStorage.getItem('puzzlePlacedPieces');
+        return savedPlacedPieces ? JSON.parse(savedPlacedPieces) : Array(9).fill(null);
+    });
+
+    // Save state whenever it changes
+    useEffect(() => {
+        localStorage.setItem('puzzleTiles', JSON.stringify(tiles));
+        localStorage.setItem('puzzlePlacedTiles', JSON.stringify(placedTiles));
+        localStorage.setItem('puzzlePlacedPieces', JSON.stringify(placedPieces));
+    }, [tiles, placedTiles, placedPieces]);
+
+    const handleReset = () => {
+        // Clear localStorage
+        localStorage.removeItem('puzzleTiles');
+        localStorage.removeItem('puzzlePlacedTiles');
+        localStorage.removeItem('puzzlePlacedPieces');
+        
+        // Reset state
+        setTiles(shuffle(initialTiles));
+        setPlacedTiles(Array(9).fill(false));
+        setPlacedPieces(Array(9).fill(null));
+        setDraggedTile(null);
+    };
 
     const handleDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
         if (!placedTiles[index]) {
@@ -72,47 +105,55 @@ const PuzzleGame: FC = () => {
 
     return (
         <div className="puzzle-container">
-            <div className="grid">
-                {Array(9).fill(null).map((_, index) => (
-                    <div
-                        key={index}
-                        className={`tile ${placedPieces[index] !== null ? 'placed' : 'empty'}`}
-                        onDragOver={handleDragOver}
-                        onDrop={(e) => handleDrop(e, index)}
-                    >
-                        {placedPieces[index] !== null && (
-                            <div 
-                                className="tile-image"
-                                style={{
-                                    backgroundImage: `url(/src/assets/puzzle-image.jpg)`,
-                                    backgroundPosition: getBackgroundPosition(placedPieces[index])
-                                }}
-                            />
-                        )}
-                    </div>
-                ))}
-            </div>
-            <div className="pieces-container">
-                {tiles.map((tile, index) => (
-                    !placedTiles[index] && (
+            <div className="puzzle-content">
+                <div className="grid">
+                    {Array(9).fill(null).map((_, index) => (
                         <div
                             key={index}
-                            className="piece"
-                            draggable={true}
-                            onDragStart={(e) => handleDragStart(e, index)}
-                            onDragEnd={handleDragEnd}
+                            className={`tile ${placedPieces[index] !== null ? 'placed' : 'empty'}`}
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, index)}
                         >
-                            <div 
-                                className="tile-image"
-                                style={{
-                                    backgroundImage: `url(/src/assets/puzzle-image.jpg)`,
-                                    backgroundPosition: getBackgroundPosition(tile)
-                                }}
-                            />
+                            {placedPieces[index] !== null && (
+                                <div 
+                                    className="tile-image"
+                                    style={{
+                                        backgroundImage: `url(/src/assets/puzzle-image.jpg)`,
+                                        backgroundPosition: getBackgroundPosition(placedPieces[index])
+                                    }}
+                                />
+                            )}
                         </div>
-                    )
-                ))}
+                    ))}
+                </div>
+                <div className="pieces-container">
+                    {tiles.map((tile, index) => (
+                        !placedTiles[index] && (
+                            <div
+                                key={index}
+                                className="piece"
+                                draggable={true}
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <div 
+                                    className="tile-image"
+                                    style={{
+                                        backgroundImage: `url(/src/assets/puzzle-image.jpg)`,
+                                        backgroundPosition: getBackgroundPosition(tile)
+                                    }}
+                                />
+                            </div>
+                        )
+                    ))}
+                </div>
             </div>
+            <button 
+                className="reset-button" 
+                onClick={handleReset}
+            >
+                Reset Puzzle
+            </button>
         </div>
     );
 };
