@@ -37,19 +37,26 @@ const PuzzleGame: FC = () => {
         e.preventDefault();
         if (draggedTile === null) return;
 
-        // Check if the piece is being placed in its correct position
-        const isCorrectPosition = tiles[draggedTile] === dropIndex + 1;
-        
-        if (isCorrectPosition) {
-            const newPlacedTiles = [...placedTiles];
-            newPlacedTiles[draggedTile] = true;
-            setPlacedTiles(newPlacedTiles);
+        const newPlacedTiles = [...placedTiles];
+        const newPlacedPieces = [...placedPieces];
 
-            const newPlacedPieces = [...placedPieces];
-            newPlacedPieces[dropIndex] = tiles[draggedTile];
-            setPlacedPieces(newPlacedPieces);
+        // If there's already a piece in the target position
+        if (placedPieces[dropIndex] !== null) {
+            // Find the index of the piece that's being replaced
+            const replacedPieceIndex = tiles.indexOf(placedPieces[dropIndex]!);
+            if (replacedPieceIndex !== -1) {
+                // Mark the replaced piece as not placed
+                newPlacedTiles[replacedPieceIndex] = false;
+            }
         }
-        
+
+        // Place the new piece
+        newPlacedTiles[draggedTile] = true;
+        newPlacedPieces[dropIndex] = tiles[draggedTile];
+
+        // Update both states at once
+        setPlacedTiles(newPlacedTiles);
+        setPlacedPieces(newPlacedPieces);
         setDraggedTile(null);
     };
 
