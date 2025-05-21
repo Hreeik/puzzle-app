@@ -1,0 +1,70 @@
+.puzzle-container {
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 5px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.pieces-container {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 5px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.tile {
+    width: 100px;
+    height: 100px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ccc;
+    transition: all 0.2s ease;
+}
+
+.tile.placed {
+    border: none;
+}
+
+.piece {
+    width: 100px;
+    height: 100px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    user-select: none;
+    background-color: #fff;
+    border: 2px solid #ccc;
+}
+
+.piece:active {
+    cursor: grabbing;
+}
+
+.piece.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+    z-index: 1000;
+}
+
+.tile-image {
+    width: 100%;
+    height: 100%;
+    background-size: 300px 300px;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
