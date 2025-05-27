@@ -40,8 +40,14 @@ const PuzzleGame: FC = () => {
     // Check if puzzle is solved
     useEffect(() => {
         const isPuzzleSolved = placedPieces.every((piece, index) => piece === index + 1);
-        setIsSolved(isPuzzleSolved);
-    }, [placedPieces]);
+        if (isPuzzleSolved !== isSolved) {
+            setIsSolved(isPuzzleSolved);
+            if (isPuzzleSolved) {
+                // Dispatch custom event for puzzle solved
+                window.dispatchEvent(new Event('puzzleSolved'));
+            }
+        }
+    }, [placedPieces, isSolved]);
 
     // Save state whenever it changes
     useEffect(() => {
@@ -62,6 +68,9 @@ const PuzzleGame: FC = () => {
         setPlacedPieces(Array(16).fill(null));
         setDraggedTile(null);
         setIsSolved(false);
+
+        // Dispatch custom event for reset
+        window.dispatchEvent(new Event('puzzleReset'));
     };
 
     const handleDragStart = (e: DragEvent<HTMLDivElement>, index: number) => {
