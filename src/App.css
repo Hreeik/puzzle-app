@@ -6,8 +6,13 @@
 
 .main-content {
     flex: 1;
-    padding-top: calc(var(--header-height) + 20px);
-    padding-bottom: 20px;
+    padding: 2rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
 /* Add some basic page transitions */

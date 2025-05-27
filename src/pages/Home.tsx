@@ -4,7 +4,7 @@ import './Home.css';
 const Home: FC = () => {
     return (
         <div className="home-container">
-            <p>Click "Play" in the menu to start the game.</p>
+            <p>Klikněte na "Hrát" v menu pro začátek hry.</p>
         </div>
     );
 };

@@ -10,19 +10,19 @@ const Header = () => {
                 <nav className="nav">
                     <Link 
                         to="/" 
-                        className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+                        className={`header-nav-link ${location.pathname === '/' ? 'active' : ''}`}
                     >
-                        Home
+                        Domů
                     </Link>
                     <Link 
                         to="/puzzle" 
-                        className={`nav-link ${location.pathname === '/puzzle' ? 'active' : ''}`}
+                        className={`header-nav-link ${location.pathname === '/puzzle' ? 'active' : ''}`}
                     >
-                        Play
+                        Hrát
                     </Link>
                 </nav>
                 <div className="logo">
-                    <span className="logo-text">Puzzle</span>
+                    <span className="logo-text">Náhodní kolemjdoucí</span>
                 </div>
             </div>
         </header>

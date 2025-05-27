@@ -4,7 +4,7 @@ import './PuzzleGame.css';
 
 type Tile = number | null;
 
-const initialTiles: Tile[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const initialTiles: Tile[] = Array.from({length: 16}, (_, i) => i + 1);
 
 function shuffle(array: Tile[]): Tile[] {
     const shuffled = [...array];
@@ -29,12 +29,12 @@ const PuzzleGame: FC = () => {
     
     const [placedTiles, setPlacedTiles] = useState<boolean[]>(() => {
         const savedPlacedTiles = localStorage.getItem('puzzlePlacedTiles');
-        return savedPlacedTiles ? JSON.parse(savedPlacedTiles) : Array(9).fill(false);
+        return savedPlacedTiles ? JSON.parse(savedPlacedTiles) : Array(16).fill(false);
     });
     
     const [placedPieces, setPlacedPieces] = useState<(number | null)[]>(() => {
         const savedPlacedPieces = localStorage.getItem('puzzlePlacedPieces');
-        return savedPlacedPieces ? JSON.parse(savedPlacedPieces) : Array(9).fill(null);
+        return savedPlacedPieces ? JSON.parse(savedPlacedPieces) : Array(16).fill(null);
     });
 
     // Check if puzzle is solved
@@ -58,8 +58,8 @@ const PuzzleGame: FC = () => {
         
         // Reset state
         setTiles(shuffle(initialTiles));
-        setPlacedTiles(Array(9).fill(false));
-        setPlacedPieces(Array(9).fill(null));
+        setPlacedTiles(Array(16).fill(false));
+        setPlacedPieces(Array(16).fill(null));
         setDraggedTile(null);
         setIsSolved(false);
     };
@@ -110,32 +110,53 @@ const PuzzleGame: FC = () => {
     };
 
     const getBackgroundPosition = (tile: Tile) => {
-        if (tile === null) return `${-2 * 100}px ${-2 * 100}px`; // Position for the empty piece
-        return `${-(tile - 1) % 3 * 100}px ${-Math.floor((tile - 1) / 3) * 100}px`;
+        if (tile === null) return `${-3 * 125}px ${-3 * 125}px`; // Position for the empty piece
+        return `${-(tile - 1) % 4 * 125}px ${-Math.floor((tile - 1) / 4) * 125}px`;
+    };
+
+    const handleTileClick = (index: number) => {
+        if (placedPieces[index] === null) return;
+
+        // Find the index of the piece in the tiles array
+        const pieceIndex = tiles.indexOf(placedPieces[index]!);
+        if (pieceIndex === -1) return;
+
+        // Create new arrays for the state updates
+        const newPlacedTiles = [...placedTiles];
+        const newPlacedPieces = [...placedPieces];
+
+        // Mark the piece as not placed
+        newPlacedTiles[pieceIndex] = false;
+        newPlacedPieces[index] = null;
+
+        // Update both states at once
+        setPlacedTiles(newPlacedTiles);
+        setPlacedPieces(newPlacedPieces);
     };
 
     return (
         <div className="puzzle-container">
             {isSolved && (
                 <div className="congratulations">
-                    <h2>Congratulations! 🎉</h2>
-                    <p>You solved the puzzle!</p>
+                    <h2>Gratulujeme! 🎉</h2>
+                    <p>Vyřešili jste puzzle!</p>
                     <button 
                         className="secret-button"
                         onClick={() => navigate('/secret')}
                     >
-                        Discover Secret
+                        Objevit tajemství
                     </button>
                 </div>
             )}
             <div className="puzzle-content">
                 <div className="grid">
-                    {Array(9).fill(null).map((_, index) => (
+                    {Array(16).fill(null).map((_, index) => (
                         <div
                             key={index}
                             className={`tile ${placedPieces[index] !== null ? 'placed' : 'empty'}`}
                             onDragOver={handleDragOver}
                             onDrop={(e) => handleDrop(e, index)}
+                            onClick={() => handleTileClick(index)}
                         >
                             {placedPieces[index] !== null && (
                                 <div 
@@ -175,7 +196,7 @@ const PuzzleGame: FC = () => {
                 className="reset-button" 
                 onClick={handleReset}
             >
-                Reset Puzzle
+                Resetovat puzzle
             </button>
         </div>
     );
