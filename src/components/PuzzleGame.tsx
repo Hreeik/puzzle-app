@@ -171,7 +171,7 @@ const PuzzleGame: FC = () => {
                                 <div 
                                     className="tile-image"
                                     style={{
-                                        backgroundImage: `url(/src/assets/puzzle-image.jpg)`,
+                                        backgroundImage: `url(puzzle-image.jpg)`,
                                         backgroundPosition: getBackgroundPosition(placedPieces[index])
                                     }}
                                 />
@@ -192,7 +192,7 @@ const PuzzleGame: FC = () => {
                                 <div 
                                     className="tile-image"
                                     style={{
-                                        backgroundImage: `url(/src/assets/puzzle-image.jpg)`,
+                                        backgroundImage: `url(puzzle-image.jpg)`,
                                         backgroundPosition: getBackgroundPosition(tile)
                                     }}
                                 />
